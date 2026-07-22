@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaunchListAI - AI tool directory submission pack generator</title>
+    <meta
+      name="description"
+      content="Generate directory listing copy, launch posts, Product Hunt style notes, and submission checklists for AI tools and micro SaaS products."
+    />
+    <meta property="og:title" content="LaunchListAI" />
+    <meta property="og:description" content="Directory submission packs for AI tools and focused SaaS launches." />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">LaunchListAI</p>
+          <h1>Turn a small tool into a directory-ready launch pack.</h1>
+          <p>
+            Generate listing copy, maker comments, social posts, and a submission checklist for Product Hunt,
+            BetaList, Microlaunch, AlternativeTo, AI directories, and niche communities.
+          </p>
+          <div class="button-row">
+            <a class="primary" href="#builder">Build launch pack</a>
+            <a class="secondary" href="/support.html">Support</a>
+          </div>
+        </div>
+        <div class="launch-board" aria-label="Launch submission pack preview">
+          <div class="launch-card">
+            <span>01</span>
+            <strong>Tagline</strong>
+            <p>One clear outcome, one audience.</p>
+          </div>
+          <div class="launch-card">
+            <span>02</span>
+            <strong>Directory copy</strong>
+            <p>Short, scannable, submission-ready.</p>
+          </div>
+          <div class="launch-card wide">
+            <span>03</span>
+            <strong>Launch checklist</strong>
+            <p>Prepare screenshots, maker notes, social drafts, and account-only submission steps.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="offer-strip">
+        <div>
+          <p class="eyebrow">Launch support</p>
+          <h2>Free pack builder now. Paid directory prep can be added later.</h2>
+          <p>Final submission, login, captcha, paid placements, and outbound posting always require user authorization.</p>
+        </div>
+        <a class="secondary" href="mailto:support@pagecheckai.com?subject=LaunchListAI%20directory%20pack">
+          Request service
+        </a>
+      </section>
+
+      <section class="grid" id="builder">
+        <form class="panel controls" id="launchForm">
+          <label>
+            Product name
+            <input id="productName" value="PageCheckAI" />
+          </label>
+          <label>
+            Product URL
+            <input id="productUrl" type="url" value="https://pagecheckai.com" />
+          </label>
+          <label>
+            Audience
+            <input id="audience" value="small business owners with traffic but no leads" />
+          </label>
+          <label>
+            Primary pain
+            <input id="pain" value="the site gets visitors but does not convert them into inquiries" />
+          </label>
+          <label>
+            Core outcome
+            <input id="outcome" value="a prioritized AI website diagnosis and fix plan" />
+          </label>
+          <label>
+            Price or offer
+            <input id="offer" value="$299 website fix sprint" />
+          </label>
+          <label>
+            Category
+            <select id="category">
+              <option value="AI productivity">AI productivity</option>
+              <option value="Marketing tool">Marketing tool</option>
+              <option value="Developer tool">Developer tool</option>
+              <option value="Business operations">Business operations</option>
+              <option value="Privacy tool">Privacy tool</option>
+            </select>
+          </label>
+          <label>
+            Notes
+            <textarea id="notes" rows="7">Browser-first tool. Keep the positioning narrow and practical. Mention privacy, speed, and free first step.</textarea>
+          </label>
+          <button class="primary" type="submit">Generate launch pack</button>
+        </form>
+
+        <section class="panel output" aria-live="polite">
+          <div class="output-head">
+            <div>
+              <p class="eyebrow">Generated pack</p>
+              <h2>Directory launch kit</h2>
+            </div>
+            <div class="button-row">
+              <button id="copyAll" type="button">Copy</button>
+              <button id="emailPack" type="button">Email pack</button>
+            </div>
+          </div>
+          <article>
+            <h3>Directory listing</h3>
+            <pre id="listingOutput"></pre>
+          </article>
+          <article>
+            <h3>Maker comment</h3>
+            <pre id="makerOutput"></pre>
+          </article>
+          <article>
+            <h3>Social posts</h3>
+            <pre id="socialOutput"></pre>
+          </article>
+          <article>
+            <h3>Submission checklist</h3>
+            <pre id="checklistOutput"></pre>
+          </article>
+          <div class="fineprint">
+            <span>Automation boundary: drafts only. Final submission or outbound sending needs authorization.</span>
+            <span><a href="/privacy.html">Privacy</a> <a href="/terms.html">Terms</a> <a href="/support.html">Support</a></span>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
