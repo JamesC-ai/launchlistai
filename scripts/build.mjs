@@ -44,6 +44,7 @@ for (const [slug, title] of pages) {
           <li>Checklist for login-only submission steps.</li>
         </ul>
         <a class="primary" href="/#builder">Build launch pack</a>
+        <p><a href="https://tools.pagecheckai.com">More PageCheckAI tools</a></p>
       </section>
     </main>
   </body>
