@@ -8,6 +8,7 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Generate launch pack/);
   assert.match(html, /Product Hunt/);
   assert.match(html, /Final submission/);
+  assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
 test("ships browser-local launch generator", async () => {
@@ -28,4 +29,5 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(sitemap, /micro-saas-launch-kit/);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
+  assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });

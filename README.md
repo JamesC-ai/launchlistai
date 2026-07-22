@@ -14,7 +14,8 @@ MVP:
 Commercial path:
 
 - Free launch pack builder.
-- Suggested paid service: `$99 LaunchListAI Directory Submission Pack`.
+- Paid service: `$99 LaunchListAI Directory Submission Pack`.
+- Payment link: `https://www.paypal.com/ncp/payment/29SE33AHUSTRC`.
 - Final submissions, paid placements, posts, DMs, and outbound emails require user authorization.
 
 Source context:

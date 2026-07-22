@@ -1,6 +1,6 @@
 # Project 016: LaunchListAI
 
-状态：MVP 已部署，正式域名已验证并可访问，待接入 PayPal
+状态：MVP 已部署，正式域名已验证并可访问，PayPal 已接入
 
 建议正式站点：
 
@@ -37,9 +37,11 @@ LaunchListAI 是 AI 工具/微型 SaaS 的目录提交资料包生成器。
 - Privacy、Terms、Support 页面
 - 5 个英文长尾 SEO 页面
 
-## 仍需要用户提供
+## 收款入口
 
-- PayPal no-code payment link，建议产品名：`LaunchListAI Directory Submission Pack`，价格：`$99 USD`。
+- PayPal no-code payment link：`https://www.paypal.com/ncp/payment/29SE33AHUSTRC`
+- 产品名：`LaunchListAI Directory Submission Pack`
+- 价格：`$99 USD`
 
 ## 安全边界
 
