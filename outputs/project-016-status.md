@@ -1,14 +1,27 @@
 # Project 016: LaunchListAI
 
-状态：MVP 已实现，待部署、自定义域名和 PayPal 接入
+状态：MVP 已部署，正式域名已验证并可访问，待接入 PayPal
 
 建议正式站点：
 
 - https://launch.pagecheckai.com
 
+备用站点：
+
+- https://launchlistai.pages.dev
+
 代码仓库：
 
 - https://github.com/JamesC-ai/launchlistai
+
+Cloudflare Pages：
+
+- Project: `launchlistai`
+- Custom domain: `launch.pagecheckai.com`
+- DNS: `launch.pagecheckai.com CNAME launchlistai.pages.dev DNS only`
+- Cloudflare Pages custom domain verification: active
+- Cloudflare Pages HTTP validation: active
+- 正式域名已通过 HTTP 200 健康检查；Pages 主域保留为兜底。
 
 ## 产品
 
