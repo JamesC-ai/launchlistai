@@ -31,3 +31,15 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
+
+test("builds thick launch SEO pages with submission safeguards", async () => {
+  const directoryPage = await readFile(new URL("../dist/ai-directory-submission-pack/index.html", import.meta.url), "utf8");
+  const socialPage = await readFile(new URL("../dist/tool-launch-social-posts/index.html", import.meta.url), "utf8");
+  assert.match(directoryPage, /Channel priority logic/);
+  assert.match(directoryPage, /Proof assets to prepare/);
+  assert.match(directoryPage, /Submission safety rules/);
+  assert.match(directoryPage, /Manual approval checkpoint/);
+  assert.match(directoryPage, /Do not submit duplicate spam listings/);
+  assert.match(socialPage, /Do not spam communities or post without reading rules/);
+  assert.match(socialPage, /Match the post to the channel/);
+});
