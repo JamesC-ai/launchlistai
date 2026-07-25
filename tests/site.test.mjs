@@ -11,6 +11,10 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Launch guides/);
   assert.match(html, /Product Hunt checklist/);
   assert.match(html, /AI directories/);
+  assert.match(html, /Microlaunch/);
+  assert.match(html, /Press kit/);
+  assert.match(html, /Listing copy/);
+  assert.match(html, /Metrics/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
@@ -42,6 +46,17 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(sitemap, /launch-day-checklist/);
   assert.match(sitemap, /post-launch-follow-up-plan/);
   assert.match(sitemap, /waitlist-launch-copy/);
+  assert.match(sitemap, /microlaunch-submission-checklist/);
+  assert.match(sitemap, /saas-launch-announcement-email/);
+  assert.match(sitemap, /product-launch-press-kit-checklist/);
+  assert.match(sitemap, /startup-launch-timeline-template/);
+  assert.match(sitemap, /product-tagline-generator/);
+  assert.match(sitemap, /directory-listing-description-generator/);
+  assert.match(sitemap, /product-launch-faq-template/);
+  assert.match(sitemap, /launch-asset-folder-checklist/);
+  assert.match(sitemap, /directory-rejection-follow-up-checklist/);
+  assert.match(sitemap, /product-launch-metrics-tracker/);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 29);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -69,4 +84,16 @@ test("builds new launch operations SEO pages", async () => {
   assert.match(launchDayPage, /Website health, payment path, support page/i);
   assert.match(trackerPage, /Stop on account risk prompts, captcha, or platform warnings/);
   assert.match(waitlistPage, /Do not imply immediate access if users will wait/);
+});
+
+test("builds outreach, rejection, and metrics pages with safe execution boundaries", async () => {
+  const emailPage = await readFile(new URL("../dist/saas-launch-announcement-email/index.html", import.meta.url), "utf8");
+  const rejectionPage = await readFile(new URL("../dist/directory-rejection-follow-up-checklist/index.html", import.meta.url), "utf8");
+  const metricsPage = await readFile(new URL("../dist/product-launch-metrics-tracker/index.html", import.meta.url), "utf8");
+  const microlaunchPage = await readFile(new URL("../dist/microlaunch-submission-checklist/index.html", import.meta.url), "utf8");
+  assert.match(emailPage, /Do not buy lists, scrape private addresses, or send indiscriminate bulk email/);
+  assert.match(emailPage, /Final recipient selection and sending require authorization/);
+  assert.match(rejectionPage, /Do not harass editors, evade bans, create duplicate accounts/);
+  assert.match(metricsPage, /Do not claim attribution, revenue, rankings, or conversion lifts/);
+  assert.match(microlaunchPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
