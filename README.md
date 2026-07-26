@@ -10,7 +10,7 @@ MVP:
 - Social post drafts.
 - Directory submission checklist.
 - Privacy, terms, support, sitemap, robots, and SEO pages.
-- 25 generated SEO pages covering launch copy, directories, assets, outreach drafts, rejection handling, and post-launch measurement.
+- 35 generated SEO pages covering launch copy, directories, assets, outreach drafts, rejection handling, gallery prep, reply moderation, pricing disclosure, localization, newsletter pitching, affiliate disclosure, support triage, and post-launch measurement.
 
 Commercial path:
 

@@ -15,6 +15,10 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Press kit/);
   assert.match(html, /Listing copy/);
   assert.match(html, /Metrics/);
+  assert.match(html, /Gallery/);
+  assert.match(html, /Reply queue/);
+  assert.match(html, /Pricing disclosure/);
+  assert.match(html, /Support triage/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
@@ -56,7 +60,21 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(sitemap, /launch-asset-folder-checklist/);
   assert.match(sitemap, /directory-rejection-follow-up-checklist/);
   assert.match(sitemap, /product-launch-metrics-tracker/);
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 29);
+  for (const route of [
+    "product-hunt-gallery-checklist",
+    "launch-reply-moderation-queue",
+    "launch-pricing-disclosure-checklist",
+    "founder-bio-for-launch-profile",
+    "no-code-product-launch-checklist",
+    "ai-tool-launch-keyword-map",
+    "localized-launch-listing-checklist",
+    "newsletter-launch-pitch-checklist",
+    "affiliate-referral-launch-disclosure",
+    "launch-support-inbox-triage",
+  ]) {
+    assert.match(sitemap, new RegExp(route));
+  }
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 39);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -96,4 +114,17 @@ test("builds outreach, rejection, and metrics pages with safe execution boundari
   assert.match(rejectionPage, /Do not harass editors, evade bans, create duplicate accounts/);
   assert.match(metricsPage, /Do not claim attribution, revenue, rankings, or conversion lifts/);
   assert.match(microlaunchPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+});
+
+test("builds gallery, reply, pricing, and support pages with launch safeguards", async () => {
+  const galleryPage = await readFile(new URL("../dist/product-hunt-gallery-checklist/index.html", import.meta.url), "utf8");
+  const replyPage = await readFile(new URL("../dist/launch-reply-moderation-queue/index.html", import.meta.url), "utf8");
+  const pricingPage = await readFile(new URL("../dist/launch-pricing-disclosure-checklist/index.html", import.meta.url), "utf8");
+  const supportPage = await readFile(new URL("../dist/launch-support-inbox-triage/index.html", import.meta.url), "utf8");
+  assert.match(galleryPage, /Do not upload fake UI states, customer data, secrets, or unlicensed media/);
+  assert.match(replyPage, /Do not post public replies without authorization/);
+  assert.match(replyPage, /founder or maker disclosure/i);
+  assert.match(pricingPage, /Do not invent refunds, guarantees, discounts, or subscription terms/);
+  assert.match(supportPage, /Sensitive replies and account changes require authorization/);
+  assert.match(supportPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
