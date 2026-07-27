@@ -35,7 +35,7 @@ LaunchListAI 是 AI 工具/微型 SaaS 的目录提交资料包生成器。
 - 自动生成 social post drafts
 - 自动生成 submission checklist
 - Privacy、Terms、Support 页面
-- 5 个英文长尾 SEO 页面
+- 45 个英文长尾 SEO 页面
 
 ## 收款入口
 
@@ -49,3 +49,9 @@ LaunchListAI 是 AI 工具/微型 SaaS 的目录提交资料包生成器。
 - 不自动登录 Product Hunt、BetaList、AlternativeTo 等平台。
 - 不自动提交、付费投放、发帖、群发邮件或私信。
 - 登录、验证码、最终提交、付款和对外发送都需要用户授权。
+
+## 2026-07-27 更新
+
+- 新增 10 个高意图 launch operations SEO 页面，覆盖 Product Hunt first comment、demo video script、directory category selection、testimonial request、early user feedback survey、AppSumo listing readiness、roadmap disclosure、bug report triage、refund policy FAQ 和 launch content calendar。
+- sitemap 从 39 个 URL 扩展到 49 个 URL。
+- 页面继续保持 draft/checklist-only 边界：不自动登录、不绕过验证码、不公开提交/发帖/回复、不创建 paid listing/discount/deal、不承诺目录 approval、排名、流量、销售或未来功能。

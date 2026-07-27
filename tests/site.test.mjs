@@ -19,6 +19,11 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Reply queue/);
   assert.match(html, /Pricing disclosure/);
   assert.match(html, /Support triage/);
+  assert.match(html, /First comment/);
+  assert.match(html, /Demo script/);
+  assert.match(html, /Category fit/);
+  assert.match(html, /Feedback survey/);
+  assert.match(html, /Bug triage/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
@@ -71,10 +76,20 @@ test("includes policy support and SEO discovery files", async () => {
     "newsletter-launch-pitch-checklist",
     "affiliate-referral-launch-disclosure",
     "launch-support-inbox-triage",
+    "product-hunt-first-comment-template",
+    "launch-demo-video-script",
+    "directory-category-selection-checklist",
+    "launch-testimonial-request-template",
+    "early-user-feedback-survey",
+    "appsumo-launch-listing-checklist",
+    "launch-roadmap-disclosure-template",
+    "launch-bug-report-triage",
+    "launch-refund-policy-faq",
+    "launch-content-calendar-template",
   ]) {
     assert.match(sitemap, new RegExp(route));
   }
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 39);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 49);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -127,4 +142,27 @@ test("builds gallery, reply, pricing, and support pages with launch safeguards",
   assert.match(pricingPage, /Do not invent refunds, guarantees, discounts, or subscription terms/);
   assert.match(supportPage, /Sensitive replies and account changes require authorization/);
   assert.match(supportPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+});
+
+test("builds first-comment, demo, category, feedback, and launch operations pages", async () => {
+  const firstCommentPage = await readFile(new URL("../dist/product-hunt-first-comment-template/index.html", import.meta.url), "utf8");
+  const demoPage = await readFile(new URL("../dist/launch-demo-video-script/index.html", import.meta.url), "utf8");
+  const categoryPage = await readFile(new URL("../dist/directory-category-selection-checklist/index.html", import.meta.url), "utf8");
+  const testimonialPage = await readFile(new URL("../dist/launch-testimonial-request-template/index.html", import.meta.url), "utf8");
+  const feedbackPage = await readFile(new URL("../dist/early-user-feedback-survey/index.html", import.meta.url), "utf8");
+  const appsumoPage = await readFile(new URL("../dist/appsumo-launch-listing-checklist/index.html", import.meta.url), "utf8");
+  const roadmapPage = await readFile(new URL("../dist/launch-roadmap-disclosure-template/index.html", import.meta.url), "utf8");
+  const bugPage = await readFile(new URL("../dist/launch-bug-report-triage/index.html", import.meta.url), "utf8");
+  const refundPage = await readFile(new URL("../dist/launch-refund-policy-faq/index.html", import.meta.url), "utf8");
+  const calendarPage = await readFile(new URL("../dist/launch-content-calendar-template/index.html", import.meta.url), "utf8");
+  assert.match(firstCommentPage, /Do not post the first comment without account owner approval/);
+  assert.match(demoPage, /Do not record private data, customer details, secrets, or real credentials/);
+  assert.match(categoryPage, /Do not place a product in unrelated categories just to chase traffic/);
+  assert.match(testimonialPage, /Do not fabricate testimonials, reviews, customer logos, or endorsements/);
+  assert.match(feedbackPage, /Do not collect sensitive personal data unless it is truly needed/);
+  assert.match(appsumoPage, /Do not create paid listings, discounts, coupons, or deal terms without authorization/);
+  assert.match(roadmapPage, /Do not promise dates, integrations, compliance outcomes, or enterprise features unless approved/);
+  assert.match(bugPage, /Do not ask users to send passwords, payment details, or sensitive files/);
+  assert.match(refundPage, /Refund decisions and account\/payment actions require authorization/);
+  assert.match(calendarPage, /Do not send bulk outreach, paid ads, or private messages without authorization/);
 });
