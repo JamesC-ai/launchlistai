@@ -24,6 +24,12 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Category fit/);
   assert.match(html, /Feedback survey/);
   assert.match(html, /Bug triage/);
+  assert.match(html, /Community rules/);
+  assert.match(html, /UTM links/);
+  assert.match(html, /Changelog/);
+  assert.match(html, /Accessibility/);
+  assert.match(html, /Objection map/);
+  assert.match(html, /Founder update/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
@@ -86,10 +92,20 @@ test("includes policy support and SEO discovery files", async () => {
     "launch-bug-report-triage",
     "launch-refund-policy-faq",
     "launch-content-calendar-template",
+    "launch-community-rules-checklist",
+    "launch-utm-link-checklist",
+    "product-launch-changelog-template",
+    "product-launch-accessibility-checklist",
+    "directory-screenshot-alt-text-checklist",
+    "launch-competitor-comparison-notes",
+    "product-launch-objection-map",
+    "trial-signup-onboarding-email",
+    "post-launch-founder-update",
+    "product-demo-for-newsletter-pitch",
   ]) {
     assert.match(sitemap, new RegExp(route));
   }
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 49);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 59);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -165,4 +181,28 @@ test("builds first-comment, demo, category, feedback, and launch operations page
   assert.match(bugPage, /Do not ask users to send passwords, payment details, or sensitive files/);
   assert.match(refundPage, /Refund decisions and account\/payment actions require authorization/);
   assert.match(calendarPage, /Do not send bulk outreach, paid ads, or private messages without authorization/);
+});
+
+test("builds post-launch quality, tracking, and community pages with safeguards", async () => {
+  const rulesPage = await readFile(new URL("../dist/launch-community-rules-checklist/index.html", import.meta.url), "utf8");
+  const utmPage = await readFile(new URL("../dist/launch-utm-link-checklist/index.html", import.meta.url), "utf8");
+  const accessibilityPage = await readFile(
+    new URL("../dist/product-launch-accessibility-checklist/index.html", import.meta.url),
+    "utf8",
+  );
+  const altTextPage = await readFile(
+    new URL("../dist/directory-screenshot-alt-text-checklist/index.html", import.meta.url),
+    "utf8",
+  );
+  const competitorPage = await readFile(
+    new URL("../dist/launch-competitor-comparison-notes/index.html", import.meta.url),
+    "utf8",
+  );
+  const onboardingPage = await readFile(new URL("../dist/trial-signup-onboarding-email/index.html", import.meta.url), "utf8");
+  assert.match(rulesPage, /Do not post in communities that ban self-promotion/);
+  assert.match(utmPage, /Do not claim exact revenue, ranking, or conversion attribution/);
+  assert.match(accessibilityPage, /Do not claim WCAG, ADA, legal, or compliance certification/);
+  assert.match(altTextPage, /Do not describe fake UI states, private customer data, or unavailable features/);
+  assert.match(competitorPage, /Do not make defamatory, misleading, or unverifiable competitor claims/);
+  assert.match(onboardingPage, /Final sending, account connection, bulk outreach/);
 });
