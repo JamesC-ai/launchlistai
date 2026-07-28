@@ -102,10 +102,20 @@ test("includes policy support and SEO discovery files", async () => {
     "trial-signup-onboarding-email",
     "post-launch-founder-update",
     "product-demo-for-newsletter-pitch",
+    "directory-listing-update-request-template",
+    "launch-screenshot-version-log",
+    "product-launch-broken-link-checklist",
+    "launch-pricing-change-announcement-draft",
+    "product-launch-status-page-message",
+    "directory-profile-ownership-handoff",
+    "launch-asset-permission-log",
+    "launch-duplicate-listing-audit",
+    "post-launch-support-faq-update",
+    "launch-campaign-archive-handoff",
   ]) {
     assert.match(sitemap, new RegExp(route));
   }
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 59);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 69);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -205,4 +215,19 @@ test("builds post-launch quality, tracking, and community pages with safeguards"
   assert.match(altTextPage, /Do not describe fake UI states, private customer data, or unavailable features/);
   assert.match(competitorPage, /Do not make defamatory, misleading, or unverifiable competitor claims/);
   assert.match(onboardingPage, /Final sending, account connection, bulk outreach/);
+});
+
+test("builds listing maintenance, ownership, support, and archive pages safely", async () => {
+  const updatePage = await readFile(new URL("../dist/directory-listing-update-request-template/index.html", import.meta.url), "utf8");
+  const linkPage = await readFile(new URL("../dist/product-launch-broken-link-checklist/index.html", import.meta.url), "utf8");
+  const pricingPage = await readFile(new URL("../dist/launch-pricing-change-announcement-draft/index.html", import.meta.url), "utf8");
+  const ownershipPage = await readFile(new URL("../dist/directory-profile-ownership-handoff/index.html", import.meta.url), "utf8");
+  const duplicatePage = await readFile(new URL("../dist/launch-duplicate-listing-audit/index.html", import.meta.url), "utf8");
+  const archivePage = await readFile(new URL("../dist/launch-campaign-archive-handoff/index.html", import.meta.url), "utf8");
+  assert.match(updatePage, /Final update requests and public changes require authorization/i);
+  assert.match(linkPage, /Do not log into accounts or change DNS, redirects, listings, or payment settings/i);
+  assert.match(pricingPage, /Do not invent discounts, grandfathering, refunds, guarantees, or billing terms/i);
+  assert.match(ownershipPage, /Do not put passwords, backup codes, session cookies, or secrets/i);
+  assert.match(duplicatePage, /Do not report, delete, claim, merge, or edit listings automatically/i);
+  assert.match(archivePage, /Do not archive credentials, payment data, private customer data, or unlicensed assets/i);
 });
