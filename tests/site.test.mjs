@@ -112,10 +112,20 @@ test("includes policy support and SEO discovery files", async () => {
     "launch-duplicate-listing-audit",
     "post-launch-support-faq-update",
     "launch-campaign-archive-handoff",
+    "launch-directory-login-handoff-checklist",
+    "launch-review-quote-permission-checklist",
+    "launch-founder-dm-reply-draft",
+    "launch-alternativeto-update-brief",
+    "launch-toolify-listing-refresh",
+    "launch-beta-user-invite-copy",
+    "launch-lifetime-deal-terms-checklist",
+    "launch-influencer-announcement-brief",
+    "launch-demo-account-safety-checklist",
+    "launch-post-mortem-template",
   ]) {
     assert.match(sitemap, new RegExp(route));
   }
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 69);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 79);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
@@ -230,4 +240,28 @@ test("builds listing maintenance, ownership, support, and archive pages safely",
   assert.match(ownershipPage, /Do not put passwords, backup codes, session cookies, or secrets/i);
   assert.match(duplicatePage, /Do not report, delete, claim, merge, or edit listings automatically/i);
   assert.match(archivePage, /Do not archive credentials, payment data, private customer data, or unlicensed assets/i);
+});
+
+test("builds account handoff, invite, deal, and post-mortem pages safely", async () => {
+  const loginPage = await readFile(
+    new URL("../dist/launch-directory-login-handoff-checklist/index.html", import.meta.url),
+    "utf8",
+  );
+  const quotePage = await readFile(
+    new URL("../dist/launch-review-quote-permission-checklist/index.html", import.meta.url),
+    "utf8",
+  );
+  const dmPage = await readFile(new URL("../dist/launch-founder-dm-reply-draft/index.html", import.meta.url), "utf8");
+  const toolifyPage = await readFile(new URL("../dist/launch-toolify-listing-refresh/index.html", import.meta.url), "utf8");
+  const dealPage = await readFile(new URL("../dist/launch-lifetime-deal-terms-checklist/index.html", import.meta.url), "utf8");
+  const demoPage = await readFile(new URL("../dist/launch-demo-account-safety-checklist/index.html", import.meta.url), "utf8");
+  const postMortemPage = await readFile(new URL("../dist/launch-post-mortem-template/index.html", import.meta.url), "utf8");
+  assert.match(loginPage, /Do not store passwords, backup codes, cookies, or one-time codes/i);
+  assert.match(quotePage, /Do not fabricate testimonials, customer logos, endorsements, or results/i);
+  assert.match(dmPage, /Do not send DMs automatically or in bulk/i);
+  assert.match(toolifyPage, /Do not promise ranking, traffic, leads, sales, or directory approval/i);
+  assert.match(dealPage, /Do not create discounts, coupons, payment links, or deal pages/i);
+  assert.match(demoPage, /Do not put passwords, API keys, backup codes, or payment data in launch docs/i);
+  assert.match(postMortemPage, /Do not claim revenue, rankings, traffic, conversion, or causation without evidence/i);
+  assert.match(postMortemPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
