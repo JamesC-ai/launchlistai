@@ -131,6 +131,11 @@ button {
   color: var(--deep);
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .launch-board {
   align-self: center;
   background: linear-gradient(145deg, #0f172a, #164e63 55%, #0f766e);
@@ -165,6 +170,31 @@ button {
 
 .offer-strip {
   padding: 18px;
+}
+
+.activation-strip {
+  align-items: stretch;
+}
+
+.activation-panel {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  flex: 0 0 min(100%, 380px);
+  gap: 10px;
+  padding: 14px;
+}
+
+.activation-actions {
+  gap: 8px;
+}
+
+.fallback-note,
+.pro-status {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
 }
 
 .grid {
@@ -286,5 +316,9 @@ pre {
   .output-head {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .activation-panel {
+    width: 100%;
   }
 }

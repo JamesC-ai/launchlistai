@@ -25,7 +25,7 @@
           </p>
           <div class="button-row">
             <a class="primary" href="#builder">Build launch pack</a>
-            <a class="secondary" href="https://www.paypal.com/ncp/payment/29SE33AHUSTRC">Buy $99 Pack</a>
+            <a class="secondary" href="https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&amp;product=launchlistai">Buy $99 Pack</a>
           </div>
         </div>
         <div class="launch-board" aria-label="Launch submission pack preview">
@@ -53,9 +53,38 @@
           <h2>Free pack builder now. Buy the $99 directory submission pack when you want a prepared handoff.</h2>
           <p>Includes launch copy cleanup, directory-ready fields, and a submission checklist. Final submission, login, captcha, paid placements, and outbound posting always require user authorization.</p>
         </div>
-        <a class="primary" href="https://www.paypal.com/ncp/payment/29SE33AHUSTRC">
+        <a class="primary" href="https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&amp;product=launchlistai">
           Buy directory pack
         </a>
+      </section>
+
+      <section class="offer-strip activation-strip" aria-label="Directory submission pack activation" data-payment-state="live">
+        <div>
+          <p class="eyebrow">$99 browser-generated download</p>
+          <h2>Activate the paid pack and download a deeper handoff from the current browser draft.</h2>
+          <p>
+            The paid download adds a channel tracker, proof-asset checklist, authorized-action gates, and handoff notes
+            for directory submission prep. Product notes and generated copy stay in this browser; activation sends only
+            the code and product key.
+          </p>
+        </div>
+        <div class="activation-panel">
+          <label for="proCode">
+            Activation code
+            <input id="proCode" type="text" autocomplete="off" placeholder="LL-XXXX-XXXX-XXXX-XXXX" />
+          </label>
+          <div class="button-row activation-actions">
+            <button id="activatePack" type="button">Activate</button>
+            <button id="downloadPaidPack" type="button" disabled>Download paid pack</button>
+          </div>
+          <p id="proStatus" class="pro-status" aria-live="polite">Enter a valid code to unlock the Directory Submission Pack.</p>
+          <p class="fallback-note">
+            Need a code?
+            <a href="https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&amp;product=launchlistai">Buy for $99</a>.
+            If checkout is unavailable, use the
+            <a href="https://www.paypal.com/ncp/payment/29SE33AHUSTRC">PayPal fallback</a> and email the receipt to support.
+          </p>
+        </div>
       </section>
 
       <section class="grid" id="builder">
