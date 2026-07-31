@@ -2,7 +2,9 @@ const fields = {
   audience: document.querySelector("#audience"),
   category: document.querySelector("#category"),
   checklistOutput: document.querySelector("#checklistOutput"),
+  activatePack: document.querySelector("#activatePack"),
   copyAll: document.querySelector("#copyAll"),
+  downloadPaidPack: document.querySelector("#downloadPaidPack"),
   emailPack: document.querySelector("#emailPack"),
   listingOutput: document.querySelector("#listingOutput"),
   makerOutput: document.querySelector("#makerOutput"),
@@ -10,10 +12,16 @@ const fields = {
   offer: document.querySelector("#offer"),
   outcome: document.querySelector("#outcome"),
   pain: document.querySelector("#pain"),
+  proCode: document.querySelector("#proCode"),
+  proStatus: document.querySelector("#proStatus"),
   productName: document.querySelector("#productName"),
   productUrl: document.querySelector("#productUrl"),
   socialOutput: document.querySelector("#socialOutput"),
 };
+
+const LICENSE_VERIFY_URL = "https://namebatch.pagecheckai.com/api/licenses/verify";
+const LICENSE_STORAGE_KEY = "launchlistai-paid-code";
+let paidPackActive = false;
 
 const directories = [
   "Product Hunt",
@@ -112,6 +120,97 @@ Checklist:
 ${fields.checklistOutput.textContent}`;
 }
 
+function paidPackText() {
+  const v = values();
+  return `${packText()}
+
+Paid handoff checklist:
+1. Verify homepage, pricing, support, privacy, terms, sitemap, and canonical product URL before public traffic.
+2. Prepare approved screenshots, gallery image order, demo notes, logo files, and alt text from real product states only.
+3. Review category fit, duplicate listing risk, login requirements, captcha, paid placement prompts, and platform rules before each submission.
+4. Keep Product Hunt, BetaList, Microlaunch, AlternativeTo, Toolify, Reddit, email, DM, paid placement, and public reply actions authorization-gated.
+5. Track every channel as draft, needs assets, needs login, blocked by captcha, paid option, submitted, pending, approved, rejected, or needs owner reply.
+6. Recheck pricing, refunds, discounts, support scope, testimonials, founder disclosure, and comparison claims against the live source of truth.
+7. Save rejection reasons, editor feedback, user questions, and support issues without exposing private customer, payment, account, or credential data.
+
+Channel tracker:
+Product: ${v.productName}
+URL: ${v.productUrl}
+Offer: ${v.offer}
+Audience: ${v.audience}
+
+Channel | Asset owner | Login owner | Status | Blocker | Last checked | Next authorized step
+Product Hunt | _____ | _____ | draft | _____ | _____ | _____
+BetaList | _____ | _____ | draft | _____ | _____ | _____
+Microlaunch | _____ | _____ | draft | _____ | _____ | _____
+AlternativeTo | _____ | _____ | draft | _____ | _____ | _____
+ThereIsAnAIForThat | _____ | _____ | draft | _____ | _____ | _____
+Toolify | _____ | _____ | draft | _____ | _____ | _____
+Relevant Reddit community | _____ | _____ | draft | _____ | _____ | _____
+Newsletter or email list | _____ | _____ | draft | _____ | _____ | _____
+
+Operating boundary:
+LaunchListAI prepares browser-local drafts and planning files. It does not log into directories, bypass captcha, submit listings, publish posts, send emails or DMs, buy ads, create discounts, change payment links, edit accounts, or guarantee approval, ranking, traffic, sales, revenue, replies, or conversion results.`;
+}
+
+function setPaidPackActive(active, message) {
+  paidPackActive = active;
+  if (fields.downloadPaidPack) fields.downloadPaidPack.disabled = !active;
+  if (fields.proStatus) fields.proStatus.textContent = message;
+}
+
+async function verifyPaidPackCode(rawCode, { quiet = false } = {}) {
+  const code = rawCode.trim().toUpperCase();
+  if (!/^LL-[A-F0-9]{4}(?:-[A-F0-9]{4}){3}$/.test(code)) {
+    setPaidPackActive(
+      false,
+      quiet ? "Enter your code to unlock the Directory Submission Pack." : "That activation code format is not valid.",
+    );
+    return false;
+  }
+  if (fields.activatePack) fields.activatePack.disabled = true;
+  if (!quiet) setPaidPackActive(false, "Checking activation code...");
+  try {
+    const response = await fetch(LICENSE_VERIFY_URL, {
+      body: JSON.stringify({ code, product: "launchlistai" }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.valid !== true || result.entitlement !== "directory_submission_pack") {
+      localStorage.removeItem(LICENSE_STORAGE_KEY);
+      setPaidPackActive(false, "The code could not be verified. Check it or contact support.");
+      return false;
+    }
+    localStorage.setItem(LICENSE_STORAGE_KEY, code);
+    fields.proCode.value = code;
+    setPaidPackActive(true, "Directory Submission Pack unlocked on this browser.");
+    return true;
+  } catch {
+    setPaidPackActive(false, "Activation is temporarily unavailable. Your launch notes remain on this device.");
+    return false;
+  } finally {
+    if (fields.activatePack) fields.activatePack.disabled = false;
+  }
+}
+
+function downloadPaidPack() {
+  if (!paidPackActive) {
+    setPaidPackActive(false, "Activate the Directory Submission Pack before downloading.");
+    fields.proCode?.focus();
+    return;
+  }
+  const blob = new Blob([paidPackText()], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "launchlistai-directory-submission-pack.txt";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 async function copyAll() {
   await navigator.clipboard.writeText(packText());
   fields.copyAll.textContent = "Copied";
@@ -133,5 +232,13 @@ document.querySelector("#launchForm").addEventListener("submit", (event) => {
 
 fields.copyAll.addEventListener("click", copyAll);
 fields.emailPack.addEventListener("click", emailPack);
+fields.activatePack?.addEventListener("click", () => verifyPaidPackCode(fields.proCode.value));
+fields.downloadPaidPack?.addEventListener("click", downloadPaidPack);
+
+const savedCode = localStorage.getItem(LICENSE_STORAGE_KEY);
+if (savedCode && fields.proCode) {
+  fields.proCode.value = savedCode;
+  verifyPaidPackCode(savedCode, { quiet: true });
+}
 
 generate();

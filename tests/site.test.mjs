@@ -30,6 +30,8 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Accessibility/);
   assert.match(html, /Objection map/);
   assert.match(html, /Founder update/);
+  assert.match(html, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai/);
+  assert.match(html, /id="downloadPaidPack"[^>]*disabled/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
 });
 
@@ -37,8 +39,16 @@ test("ships browser-local launch generator", async () => {
   const script = await readFile(new URL("../dist/app.js", import.meta.url), "utf8");
   assert.match(script, /function generate/);
   assert.match(script, /LaunchListAI pack/);
+  assert.match(script, /function paidPackText/);
+  assert.match(script, /Paid handoff checklist/);
+  assert.match(script, /Channel tracker/);
+  assert.match(script, /launchlistai-directory-submission-pack\.txt/);
+  assert.match(script, /https:\/\/namebatch\.pagecheckai\.com\/api\/licenses\/verify/);
+  assert.match(script, /JSON\.stringify\(\{ code, product: "launchlistai" \}\)/);
+  assert.match(script, /directory_submission_pack/);
+  assert.doesNotMatch(script, /JSON\.stringify\(\{[^}]*notes/i);
+  assert.doesNotMatch(script, /JSON\.stringify\(\{[^}]*listingOutput/i);
   assert.match(script, /AlternativeTo/);
-  assert.doesNotMatch(script, /fetch\(/);
 });
 
 test("includes policy support and SEO discovery files", async () => {
@@ -127,7 +137,11 @@ test("includes policy support and SEO discovery files", async () => {
   }
   assert.equal((sitemap.match(/<loc>/g) || []).length, 79);
   assert.match(terms, /does not guarantee directory approval/i);
+  assert.match(terms, /Paid packs are browser-generated planning files/);
+  assert.match(terms, /does not bypass captcha/);
   assert.match(support, /LaunchListAI support/);
+  assert.match(support, /generated locally/i);
+  assert.match(support, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
   assert.equal(indexNowKey.trim(), "5211ab56e638ea380b1b270ab15c79d9");
   assert.match(indexNowScript, /api\.indexnow\.org\/indexnow/);
@@ -164,7 +178,7 @@ test("builds outreach, rejection, and metrics pages with safe execution boundari
   assert.match(emailPage, /Final recipient selection and sending require authorization/);
   assert.match(rejectionPage, /Do not harass editors, evade bans, create duplicate accounts/);
   assert.match(metricsPage, /Do not claim attribution, revenue, rankings, or conversion lifts/);
-  assert.match(microlaunchPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(microlaunchPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
 });
 
 test("builds gallery, reply, pricing, and support pages with launch safeguards", async () => {
@@ -177,7 +191,7 @@ test("builds gallery, reply, pricing, and support pages with launch safeguards",
   assert.match(replyPage, /founder or maker disclosure/i);
   assert.match(pricingPage, /Do not invent refunds, guarantees, discounts, or subscription terms/);
   assert.match(supportPage, /Sensitive replies and account changes require authorization/);
-  assert.match(supportPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(supportPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
 });
 
 test("builds first-comment, demo, category, feedback, and launch operations pages", async () => {
@@ -263,5 +277,5 @@ test("builds account handoff, invite, deal, and post-mortem pages safely", async
   assert.match(dealPage, /Do not create discounts, coupons, payment links, or deal pages/i);
   assert.match(demoPage, /Do not put passwords, API keys, backup codes, or payment data in launch docs/i);
   assert.match(postMortemPage, /Do not claim revenue, rankings, traffic, conversion, or causation without evidence/i);
-  assert.match(postMortemPage, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(postMortemPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
 });

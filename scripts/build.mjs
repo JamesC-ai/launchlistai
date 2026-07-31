@@ -4,7 +4,7 @@ const root = new URL("../", import.meta.url);
 const distDir = new URL("dist/", root);
 const publicDir = new URL("public/", root);
 const site = "https://launch.pagecheckai.com";
-const packUrl = "https://www.paypal.com/ncp/payment/29SE33AHUSTRC";
+const packUrl = "https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&product=launchlistai";
 const pages = [
   {
     slug: "ai-directory-submission-pack",
