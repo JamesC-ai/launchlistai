@@ -172,6 +172,23 @@ button:disabled {
   padding: 18px;
 }
 
+.trust-strip {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  color: #065f46;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 14px 18px;
+}
+
+.trust-strip span {
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
 .activation-strip {
   align-items: stretch;
 }
@@ -195,6 +212,28 @@ button:disabled {
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.55;
+}
+
+.buyer-strip {
+  align-items: start;
+}
+
+.buyer-grid {
+  display: grid;
+  flex: 1 1 620px;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.buyer-grid article {
+  border-left: 3px solid var(--accent-2);
+  display: grid;
+  gap: 6px;
+  padding-left: 12px;
+}
+
+.buyer-grid p {
+  font-size: 0.88rem;
 }
 
 .grid {
@@ -320,5 +359,10 @@ pre {
 
   .activation-panel {
     width: 100%;
+  }
+
+  .trust-strip,
+  .buyer-grid {
+    grid-template-columns: 1fr;
   }
 }

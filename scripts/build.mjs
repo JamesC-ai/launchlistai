@@ -1681,6 +1681,10 @@ for (const page of pages) {
         <h2>Operating boundary</h2>
         <p>LaunchListAI generates drafts and checklists. It does not log into platforms, bypass captcha, submit final listings, buy ads, or guarantee directory approval.</p>
       </section>
+      <section class="panel seo-card">
+        <h2>When the $99 directory pack is worth it</h2>
+        <p>Start with the free browser-local launch kit. The paid pack is a fit when your canonical product URL, offer, audience, screenshots, and target channels are ready and you want a deeper reviewable handoff with proof-asset checks and status tracking. It is not a managed submission service: login, CAPTCHA, final submission, public posting, paid placement, email, DM, approval, ranking, traffic, sales, and revenue remain outside the pack.</p>
+      </section>
       <section class="seo-grid" aria-label="Launch operations details">
         <article class="panel seo-card">
           <h2>Channel priority logic</h2>

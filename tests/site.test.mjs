@@ -6,6 +6,12 @@ test("renders LaunchListAI builder", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   assert.match(html, /LaunchListAI/);
   assert.match(html, /Generate launch pack/);
+  assert.match(html, /Build free launch kit/);
+  assert.match(html, /Check paid fit/);
+  assert.match(html, /Free launch kit first/);
+  assert.match(html, /\$99 only after submission-ready/);
+  assert.match(html, /Good fit for the \$99 pack/);
+  assert.match(html, /Skip payment when/);
   assert.match(html, /Product Hunt/);
   assert.match(html, /Final submission/);
   assert.match(html, /Launch guides/);
@@ -154,6 +160,8 @@ test("builds thick launch SEO pages with submission safeguards", async () => {
   assert.match(directoryPage, /Proof assets to prepare/);
   assert.match(directoryPage, /Submission safety rules/);
   assert.match(directoryPage, /Manual approval checkpoint/);
+  assert.match(directoryPage, /When the \$99 directory pack is worth it/);
+  assert.match(directoryPage, /Start with the free browser-local launch kit/);
   assert.match(directoryPage, /Do not submit duplicate spam listings/);
   assert.match(socialPage, /Do not spam communities or post without reading rules/);
   assert.match(socialPage, /Match the post to the channel/);
