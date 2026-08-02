@@ -39,6 +39,8 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai/);
   assert.match(html, /id="downloadPaidPack"[^>]*disabled/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(html, /After payment, enter the LL- activation code above/);
+  assert.match(html, /open support/);
 });
 
 test("ships browser-local launch generator", async () => {
