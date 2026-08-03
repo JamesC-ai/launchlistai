@@ -36,7 +36,8 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Accessibility/);
   assert.match(html, /Objection map/);
   assert.match(html, /Founder update/);
-  assert.match(html, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai/);
+  assert.match(html, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_pack/);
+  assert.match(html, /utm_content=activation_pack/);
   assert.match(html, /id="downloadPaidPack"[^>]*disabled/);
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
   assert.match(html, /After payment, enter the LL- activation code above/);
@@ -149,7 +150,7 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(terms, /does not bypass captcha/);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /generated locally/i);
-  assert.match(support, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai/);
+  assert.match(support, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_pack/);
   assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
   assert.equal(indexNowKey.trim(), "5211ab56e638ea380b1b270ab15c79d9");
   assert.match(indexNowScript, /api\.indexnow\.org\/indexnow/);
@@ -165,6 +166,7 @@ test("builds thick launch SEO pages with submission safeguards", async () => {
   assert.match(directoryPage, /When the \$99 directory pack is worth it/);
   assert.match(directoryPage, /Start with the free browser-local launch kit/);
   assert.match(directoryPage, /Do not submit duplicate spam listings/);
+  assert.match(directoryPage, /utm_content=seo_ai-directory-submission-pack_pack/);
   assert.match(socialPage, /Do not spam communities or post without reading rules/);
   assert.match(socialPage, /Match the post to the channel/);
 });
@@ -188,7 +190,7 @@ test("builds outreach, rejection, and metrics pages with safe execution boundari
   assert.match(emailPage, /Final recipient selection and sending require authorization/);
   assert.match(rejectionPage, /Do not harass editors, evade bans, create duplicate accounts/);
   assert.match(metricsPage, /Do not claim attribution, revenue, rankings, or conversion lifts/);
-  assert.match(microlaunchPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
+  assert.match(microlaunchPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_microlaunch-submission-checklist_pack/);
 });
 
 test("builds gallery, reply, pricing, and support pages with launch safeguards", async () => {
@@ -201,7 +203,7 @@ test("builds gallery, reply, pricing, and support pages with launch safeguards",
   assert.match(replyPage, /founder or maker disclosure/i);
   assert.match(pricingPage, /Do not invent refunds, guarantees, discounts, or subscription terms/);
   assert.match(supportPage, /Sensitive replies and account changes require authorization/);
-  assert.match(supportPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
+  assert.match(supportPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_launch-support-inbox-triage_pack/);
 });
 
 test("builds first-comment, demo, category, feedback, and launch operations pages", async () => {
@@ -287,5 +289,5 @@ test("builds account handoff, invite, deal, and post-mortem pages safely", async
   assert.match(dealPage, /Do not create discounts, coupons, payment links, or deal pages/i);
   assert.match(demoPage, /Do not put passwords, API keys, backup codes, or payment data in launch docs/i);
   assert.match(postMortemPage, /Do not claim revenue, rankings, traffic, conversion, or causation without evidence/i);
-  assert.match(postMortemPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&product=launchlistai/);
+  assert.match(postMortemPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_launch-post-mortem-template_pack/);
 });

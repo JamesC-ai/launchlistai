@@ -1627,6 +1627,15 @@ function escapeHtml(value) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
+function checkoutUrlFor(content) {
+  const url = new URL(packUrl);
+  url.searchParams.set("utm_source", "launchlistai");
+  url.searchParams.set("utm_medium", "owned");
+  url.searchParams.set("utm_campaign", "conversion");
+  url.searchParams.set("utm_content", content);
+  return escapeHtml(url.toString());
+}
+
 function list(items) {
   return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
 }
@@ -1661,7 +1670,7 @@ for (const page of pages) {
       <p>${escapeHtml(page.description)}</p>
       <div class="button-row">
         <a class="primary" href="/#builder">Build launch pack</a>
-        <a class="secondary" href="${packUrl}">Buy $99 pack</a>
+        <a class="secondary" href="${checkoutUrlFor(`seo_${slug}_pack`)}">Buy $99 pack</a>
       </div>
       <section class="seo-grid" aria-label="LaunchListAI page details">
         <article class="panel seo-card">
