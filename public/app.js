@@ -9,6 +9,7 @@ const fields = {
   downloadPaidPack: document.querySelector("#downloadPaidPack"),
   emailPack: document.querySelector("#emailPack"),
   listingOutput: document.querySelector("#listingOutput"),
+  launchForm: document.querySelector("#launchForm"),
   makerOutput: document.querySelector("#makerOutput"),
   notes: document.querySelector("#notes"),
   offer: document.querySelector("#offer"),
@@ -55,7 +56,20 @@ function values() {
   };
 }
 
+function productUrlIsSafe() {
+  const rawUrl = value(fields.productUrl);
+  let safe = false;
+  try {
+    safe = ["http:", "https:"].includes(new URL(rawUrl).protocol);
+  } catch {
+    safe = false;
+  }
+  fields.productUrl.setCustomValidity(rawUrl && !safe ? "Use a public HTTP or HTTPS product URL." : "");
+  return safe;
+}
+
 function generate() {
+  const productUrlValid = productUrlIsSafe();
   const v = values();
   const tagline = `${v.productName} helps ${v.audience} get ${v.outcome}.`;
 
@@ -96,7 +110,17 @@ Tool: ${v.productName} - ${v.productUrl}
 Post 3:
 Small tools work best when they do one job clearly. ${v.productName} is for ${v.audience}: ${v.productUrl}`;
 
-  const handoffReady = v.assetOwner !== "not assigned" && v.accountOwner !== "not assigned";
+  const requiredDetailsReady = [
+    fields.productName,
+    fields.productUrl,
+    fields.audience,
+    fields.pain,
+    fields.outcome,
+    fields.offer,
+    fields.assetOwner,
+    fields.accountOwner,
+  ].every((field) => value(field));
+  const handoffReady = requiredDetailsReady && productUrlValid;
   fields.checklistOutput.textContent = `Submission handoff:
 - Asset owner: ${v.assetOwner}
 - Account and final-submit owner: ${v.accountOwner}
@@ -212,6 +236,10 @@ function downloadPaidPack() {
     fields.proCode?.focus();
     return;
   }
+  if (!fields.launchForm.reportValidity()) {
+    setPaidPackActive(true, "Complete the required launch details and owners before downloading the paid pack.");
+    return;
+  }
   const blob = new Blob([paidPackText()], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -232,17 +260,18 @@ async function copyAll() {
 }
 
 function emailPack() {
+  if (!fields.launchForm.reportValidity()) return;
   const v = values();
   const subject = `LaunchListAI pack - ${v.productName}`;
   location.href = `mailto:support@pagecheckai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(packText())}`;
 }
 
-document.querySelector("#launchForm").addEventListener("submit", (event) => {
+fields.launchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   generate();
 });
-document.querySelector("#launchForm").addEventListener("input", generate);
-document.querySelector("#launchForm").addEventListener("change", generate);
+fields.launchForm.addEventListener("input", generate);
+fields.launchForm.addEventListener("change", generate);
 
 fields.copyAll.addEventListener("click", copyAll);
 fields.emailPack.addEventListener("click", emailPack);

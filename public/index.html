@@ -119,35 +119,35 @@
         <form class="panel controls" id="launchForm">
           <label>
             Product name
-            <input id="productName" value="PageCheckAI" />
+            <input id="productName" placeholder="Product name" required />
           </label>
           <label>
             Product URL
-            <input id="productUrl" type="url" value="https://pagecheckai.com" />
+            <input id="productUrl" type="url" placeholder="https://your-product.example" required />
           </label>
           <label>
             Audience
-            <input id="audience" value="small business owners with traffic but no leads" />
+            <input id="audience" placeholder="Specific users who have this problem" required />
           </label>
           <label>
             Primary pain
-            <input id="pain" value="the site gets visitors but does not convert them into inquiries" />
+            <input id="pain" placeholder="The concrete problem they already recognize" required />
           </label>
           <label>
             Core outcome
-            <input id="outcome" value="a prioritized AI website diagnosis and fix plan" />
+            <input id="outcome" placeholder="The concrete output or workflow improvement" required />
           </label>
           <label>
             Price or offer
-            <input id="offer" value="$299 website fix sprint" />
+            <input id="offer" placeholder="Example: free tool, $19 export, or $99 review" required />
           </label>
           <label>
             Asset owner or role
-            <input id="assetOwner" placeholder="e.g. launch coordinator" />
+            <input id="assetOwner" placeholder="e.g. launch coordinator" required />
           </label>
           <label>
             Account and final-submit owner or role
-            <input id="accountOwner" placeholder="e.g. founder" />
+            <input id="accountOwner" placeholder="e.g. founder" required />
           </label>
           <label>
             Category
@@ -161,7 +161,7 @@
           </label>
           <label>
             Notes
-            <textarea id="notes" rows="7">Browser-first tool. Keep the positioning narrow and practical. Mention privacy, speed, and free first step.</textarea>
+            <textarea id="notes" rows="7" placeholder="Add approved positioning, disclosure, screenshot, support, and channel notes."></textarea>
           </label>
           <button class="primary" type="submit">Generate launch pack</button>
         </form>

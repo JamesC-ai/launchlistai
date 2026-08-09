@@ -66,6 +66,23 @@ test("ships browser-local launch generator", async () => {
   assert.match(script, /addEventListener\("input", generate\)/);
 });
 
+test("requires product facts and both owners before outbound handoff", async () => {
+  const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
+  const script = await readFile(new URL("../dist/app.js", import.meta.url), "utf8");
+
+  assert.doesNotMatch(
+    html,
+    /value="PageCheckAI"|value="https:\/\/pagecheckai\.com"|value="\$299 website fix sprint"/,
+  );
+  for (const id of ["productName", "productUrl", "audience", "pain", "outcome", "offer", "assetOwner", "accountOwner"]) {
+    assert.match(html, new RegExp(`id="${id}"[^>]*required`));
+  }
+  assert.match(script, /function productUrlIsSafe/);
+  assert.match(script, /\["http:", "https:"\]/);
+  assert.match(script, /launchForm\.reportValidity\(\)/);
+  assert.match(script, /Complete the required launch details and owners before downloading the paid pack/);
+});
+
 test("includes policy support and SEO discovery files", async () => {
   const robots = await readFile(new URL("../dist/robots.txt", import.meta.url), "utf8");
   const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
