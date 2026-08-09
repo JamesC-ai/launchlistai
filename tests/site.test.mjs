@@ -42,6 +42,8 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
   assert.match(html, /After payment, enter the LL- activation code above/);
   assert.match(html, /open support/);
+  assert.match(html, /id="assetOwner"/);
+  assert.match(html, /id="accountOwner"/);
 });
 
 test("ships browser-local launch generator", async () => {
@@ -58,6 +60,10 @@ test("ships browser-local launch generator", async () => {
   assert.doesNotMatch(script, /JSON\.stringify\(\{[^}]*notes/i);
   assert.doesNotMatch(script, /JSON\.stringify\(\{[^}]*listingOutput/i);
   assert.match(script, /AlternativeTo/);
+  assert.match(script, /Asset owner: \$\{v\.assetOwner\}/);
+  assert.match(script, /Account and final-submit owner: \$\{v\.accountOwner\}/);
+  assert.match(script, /assign both owners before paid submission work/);
+  assert.match(script, /addEventListener\("input", generate\)/);
 });
 
 test("includes policy support and SEO discovery files", async () => {

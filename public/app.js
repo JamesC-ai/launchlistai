@@ -1,5 +1,7 @@
 const fields = {
+  accountOwner: document.querySelector("#accountOwner"),
   audience: document.querySelector("#audience"),
+  assetOwner: document.querySelector("#assetOwner"),
   category: document.querySelector("#category"),
   checklistOutput: document.querySelector("#checklistOutput"),
   activatePack: document.querySelector("#activatePack"),
@@ -40,7 +42,9 @@ function value(node, fallback = "") {
 
 function values() {
   return {
+    accountOwner: value(fields.accountOwner, "not assigned"),
     audience: value(fields.audience, "busy operators"),
+    assetOwner: value(fields.assetOwner, "not assigned"),
     category: fields.category.value,
     notes: value(fields.notes),
     offer: value(fields.offer, "free tool"),
@@ -92,7 +96,13 @@ Tool: ${v.productName} - ${v.productUrl}
 Post 3:
 Small tools work best when they do one job clearly. ${v.productName} is for ${v.audience}: ${v.productUrl}`;
 
-  fields.checklistOutput.textContent = `Directory checklist:
+  const handoffReady = v.assetOwner !== "not assigned" && v.accountOwner !== "not assigned";
+  fields.checklistOutput.textContent = `Submission handoff:
+- Asset owner: ${v.assetOwner}
+- Account and final-submit owner: ${v.accountOwner}
+- Readiness: ${handoffReady ? "owners assigned; keep login and final submission authorization-gated" : "not ready; assign both owners before paid submission work"}
+
+Directory checklist:
 ${directories.map((name, index) => `${index + 1}. ${name}: prepare URL, tagline, short description, screenshots, maker note, category, tags.`).join("\n")}
 
 Do before submitting:
@@ -138,16 +148,18 @@ Product: ${v.productName}
 URL: ${v.productUrl}
 Offer: ${v.offer}
 Audience: ${v.audience}
+Asset owner: ${v.assetOwner}
+Account and final-submit owner: ${v.accountOwner}
 
 Channel | Asset owner | Login owner | Status | Blocker | Last checked | Next authorized step
-Product Hunt | _____ | _____ | draft | _____ | _____ | _____
-BetaList | _____ | _____ | draft | _____ | _____ | _____
-Microlaunch | _____ | _____ | draft | _____ | _____ | _____
-AlternativeTo | _____ | _____ | draft | _____ | _____ | _____
-ThereIsAnAIForThat | _____ | _____ | draft | _____ | _____ | _____
-Toolify | _____ | _____ | draft | _____ | _____ | _____
-Relevant Reddit community | _____ | _____ | draft | _____ | _____ | _____
-Newsletter or email list | _____ | _____ | draft | _____ | _____ | _____
+Product Hunt | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+BetaList | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+Microlaunch | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+AlternativeTo | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+ThereIsAnAIForThat | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+Toolify | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+Relevant Reddit community | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
+Newsletter or email list | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
 
 Operating boundary:
 LaunchListAI prepares browser-local drafts and planning files. It does not log into directories, bypass captcha, submit listings, publish posts, send emails or DMs, buy ads, create discounts, change payment links, edit accounts, or guarantee approval, ranking, traffic, sales, revenue, replies, or conversion results.`;
@@ -229,6 +241,8 @@ document.querySelector("#launchForm").addEventListener("submit", (event) => {
   event.preventDefault();
   generate();
 });
+document.querySelector("#launchForm").addEventListener("input", generate);
+document.querySelector("#launchForm").addEventListener("change", generate);
 
 fields.copyAll.addEventListener("click", copyAll);
 fields.emailPack.addEventListener("click", emailPack);
