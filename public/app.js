@@ -1,5 +1,7 @@
 const fields = {
   accountOwner: document.querySelector("#accountOwner"),
+  activationFallbackLink: document.querySelector("#activationFallbackLink"),
+  activationPaymentLink: document.querySelector("#activationPaymentLink"),
   audience: document.querySelector("#audience"),
   assetOwner: document.querySelector("#assetOwner"),
   category: document.querySelector("#category"),
@@ -15,16 +17,26 @@ const fields = {
   offer: document.querySelector("#offer"),
   outcome: document.querySelector("#outcome"),
   pain: document.querySelector("#pain"),
+  paymentLink: document.querySelector("#paymentLink"),
   proCode: document.querySelector("#proCode"),
   proStatus: document.querySelector("#proStatus"),
   productName: document.querySelector("#productName"),
   productUrl: document.querySelector("#productUrl"),
+  screenshotCount: document.querySelector("#screenshotCount"),
   socialOutput: document.querySelector("#socialOutput"),
+  targetChannels: document.querySelector("#targetChannels"),
 };
 
 const LICENSE_VERIFY_URL = "https://namebatch.pagecheckai.com/api/licenses/verify";
 const LICENSE_STORAGE_KEY = "launchlistai-paid-code";
 let paidPackActive = false;
+let launchGenerated = false;
+let launchQualified = false;
+
+const paymentBaseLinks = {
+  checkout: "https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&product=launchlistai",
+  fallback: "https://www.paypal.com/ncp/payment/29SE33AHUSTRC",
+};
 
 const directories = [
   "Product Hunt",
@@ -43,17 +55,33 @@ function value(node, fallback = "") {
 
 function values() {
   return {
-    accountOwner: value(fields.accountOwner, "not assigned"),
-    audience: value(fields.audience, "busy operators"),
-    assetOwner: value(fields.assetOwner, "not assigned"),
+    accountOwner: value(fields.accountOwner),
+    audience: value(fields.audience),
+    assetOwner: value(fields.assetOwner),
     category: fields.category.value,
     notes: value(fields.notes),
-    offer: value(fields.offer, "free tool"),
-    outcome: value(fields.outcome, "a faster workflow"),
-    pain: value(fields.pain, "a painful manual process"),
-    productName: value(fields.productName, "the product"),
-    productUrl: value(fields.productUrl, "https://example.com"),
+    offer: value(fields.offer),
+    outcome: value(fields.outcome),
+    pain: value(fields.pain),
+    productName: value(fields.productName),
+    productUrl: value(fields.productUrl),
+    screenshotCount: Math.max(Number(fields.screenshotCount.value) || 0, 0),
+    targetChannels: value(fields.targetChannels),
   };
+}
+
+function checkoutHref(content) {
+  const url = new URL(paymentBaseLinks.checkout);
+  const inbound = new URLSearchParams(location.search);
+  url.searchParams.set("utm_source", "launchlistai");
+  url.searchParams.set("utm_medium", "owned");
+  url.searchParams.set("utm_campaign", "conversion");
+  url.searchParams.set("utm_content", content);
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+    const inboundValue = inbound.get(key)?.trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "").slice(0, 80);
+    if (inboundValue) url.searchParams.set(key, inboundValue);
+  }
+  return url.toString();
 }
 
 function productUrlIsSafe() {
@@ -68,9 +96,63 @@ function productUrlIsSafe() {
   return safe;
 }
 
+function qualificationIssues(v = values()) {
+  const issues = [];
+  if (!v.productName) issues.push("the product name");
+  if (!v.productUrl || !productUrlIsSafe()) issues.push("a public HTTP or HTTPS product URL");
+  if (!v.audience) issues.push("a specific audience");
+  if (!v.pain) issues.push("the primary pain");
+  if (!v.outcome) issues.push("the core outcome");
+  if (!v.offer) issues.push("the current price or offer");
+  if (!v.assetOwner) issues.push("an asset owner");
+  if (!v.accountOwner) issues.push("an account and final-submit owner");
+  if (v.screenshotCount < 2) issues.push("at least 2 approved screenshots");
+  if (v.targetChannels.length < 10) issues.push("2-4 named target channels");
+  if (v.notes.length < 80) issues.push("at least 80 characters of verified launch notes");
+  return issues;
+}
+
+function syncDownloadButton() {
+  fields.downloadPaidPack.disabled = !(paidPackActive && launchQualified);
+}
+
+function setPurchaseState(qualified) {
+  launchQualified = qualified;
+  fields.paymentLink.href = qualified ? checkoutHref("home_current_plan") : "#builder";
+  fields.activationPaymentLink.href = qualified ? checkoutHref("activation_current_plan") : "#builder";
+  fields.activationFallbackLink.href = qualified ? paymentBaseLinks.fallback : "#builder";
+  fields.paymentLink.textContent = qualified
+    ? "Pay $99 for this current launch plan"
+    : "Complete the current launch plan first";
+  fields.activationPaymentLink.textContent = qualified
+    ? "Buy for $99 after fit"
+    : "Generate a ready launch plan before buying";
+  fields.copyAll.disabled = !qualified;
+  fields.emailPack.disabled = !qualified;
+  syncDownloadButton();
+  if (paidPackActive) {
+    fields.proStatus.textContent = qualified
+      ? "Directory Submission Pack ready for this current launch plan."
+      : "Activation verified. Generate a current ready launch plan before downloading.";
+  }
+}
+
+function clearGenerated(message = "Complete the current product facts, proof assets, and owners, then generate a launch plan.") {
+  fields.listingOutput.textContent = message;
+  fields.makerOutput.textContent = "No current maker comment yet.";
+  fields.socialOutput.textContent = "No current social drafts yet.";
+  fields.checklistOutput.textContent = "No current submission checklist yet.";
+}
+
+function invalidateLaunch() {
+  launchGenerated = false;
+  setPurchaseState(false);
+  clearGenerated("Launch inputs changed. Generate the current plan again before copying, emailing, paying, or downloading.");
+}
+
 function generate() {
-  const productUrlValid = productUrlIsSafe();
   const v = values();
+  const issues = qualificationIssues(v);
   const tagline = `${v.productName} helps ${v.audience} get ${v.outcome}.`;
 
   fields.listingOutput.textContent = `Product: ${v.productName}
@@ -84,7 +166,11 @@ Long description:
 ${v.productName} is intentionally narrow. It is built for people who already know the problem and want a fast, practical workflow instead of a large platform. Use it to move from "${v.pain}" to "${v.outcome}" with a simple first step.
 
 Notes:
-${v.notes}`;
+${v.notes}
+
+Proof assets:
+- Approved screenshots: ${v.screenshotCount}
+- Target channels: ${v.targetChannels}`;
 
   fields.makerOutput.textContent = `Hi, I built ${v.productName} for ${v.audience}.
 
@@ -110,21 +196,12 @@ Tool: ${v.productName} - ${v.productUrl}
 Post 3:
 Small tools work best when they do one job clearly. ${v.productName} is for ${v.audience}: ${v.productUrl}`;
 
-  const requiredDetailsReady = [
-    fields.productName,
-    fields.productUrl,
-    fields.audience,
-    fields.pain,
-    fields.outcome,
-    fields.offer,
-    fields.assetOwner,
-    fields.accountOwner,
-  ].every((field) => value(field));
-  const handoffReady = requiredDetailsReady && productUrlValid;
   fields.checklistOutput.textContent = `Submission handoff:
 - Asset owner: ${v.assetOwner}
 - Account and final-submit owner: ${v.accountOwner}
-- Readiness: ${handoffReady ? "owners assigned; keep login and final submission authorization-gated" : "not ready; assign both owners before paid submission work"}
+- Approved screenshots: ${v.screenshotCount}
+- Target channels: ${v.targetChannels}
+- Readiness: ${issues.length === 0 ? "current plan is reviewable; keep login and final submission authorization-gated" : `not ready - add ${issues.join(", ")}`}
 
 Directory checklist:
 ${directories.map((name, index) => `${index + 1}. ${name}: prepare URL, tagline, short description, screenshots, maker note, category, tags.`).join("\n")}
@@ -136,6 +213,7 @@ Do before submitting:
 - Do not pay for placement without approval.
 - Do not submit through logged-in accounts without authorization.
 - Track status: draft, submitted, pending, approved, rejected, needs login.`;
+  return issues;
 }
 
 function packText() {
@@ -174,6 +252,8 @@ Offer: ${v.offer}
 Audience: ${v.audience}
 Asset owner: ${v.assetOwner}
 Account and final-submit owner: ${v.accountOwner}
+Approved screenshots: ${v.screenshotCount}
+Target channels: ${v.targetChannels}
 
 Channel | Asset owner | Login owner | Status | Blocker | Last checked | Next authorized step
 Product Hunt | ${v.assetOwner} | ${v.accountOwner} | draft | _____ | _____ | _____
@@ -191,7 +271,7 @@ LaunchListAI prepares browser-local drafts and planning files. It does not log i
 
 function setPaidPackActive(active, message) {
   paidPackActive = active;
-  if (fields.downloadPaidPack) fields.downloadPaidPack.disabled = !active;
+  syncDownloadButton();
   if (fields.proStatus) fields.proStatus.textContent = message;
 }
 
@@ -220,7 +300,12 @@ async function verifyPaidPackCode(rawCode, { quiet = false } = {}) {
     }
     localStorage.setItem(LICENSE_STORAGE_KEY, code);
     fields.proCode.value = code;
-    setPaidPackActive(true, "Directory Submission Pack unlocked on this browser.");
+    setPaidPackActive(
+      true,
+      launchQualified
+        ? "Directory Submission Pack ready for this current launch plan."
+        : "Activation verified. Generate a current ready launch plan before downloading.",
+    );
     return true;
   } catch {
     setPaidPackActive(false, "Activation is temporarily unavailable. Your launch notes remain on this device.");
@@ -236,8 +321,13 @@ function downloadPaidPack() {
     fields.proCode?.focus();
     return;
   }
+  if (!launchGenerated || !launchQualified) {
+    setPaidPackActive(true, "Generate a current ready launch plan before downloading the paid pack.");
+    fields.launchForm.querySelector(":invalid")?.focus();
+    return;
+  }
   if (!fields.launchForm.reportValidity()) {
-    setPaidPackActive(true, "Complete the required launch details and owners before downloading the paid pack.");
+    setPaidPackActive(true, "Complete the current launch facts, proof assets, and owners before downloading the paid pack.");
     return;
   }
   const blob = new Blob([paidPackText()], { type: "text/plain;charset=utf-8" });
@@ -252,6 +342,7 @@ function downloadPaidPack() {
 }
 
 async function copyAll() {
+  if (!launchGenerated || !launchQualified) return;
   await navigator.clipboard.writeText(packText());
   fields.copyAll.textContent = "Copied";
   setTimeout(() => {
@@ -260,7 +351,7 @@ async function copyAll() {
 }
 
 function emailPack() {
-  if (!fields.launchForm.reportValidity()) return;
+  if (!launchGenerated || !launchQualified || !fields.launchForm.reportValidity()) return;
   const v = values();
   const subject = `LaunchListAI pack - ${v.productName}`;
   location.href = `mailto:support@pagecheckai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(packText())}`;
@@ -268,10 +359,12 @@ function emailPack() {
 
 fields.launchForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  generate();
+  const issues = generate();
+  launchGenerated = true;
+  setPurchaseState(issues.length === 0);
 });
-fields.launchForm.addEventListener("input", generate);
-fields.launchForm.addEventListener("change", generate);
+fields.launchForm.addEventListener("input", invalidateLaunch);
+fields.launchForm.addEventListener("change", invalidateLaunch);
 
 fields.copyAll.addEventListener("click", copyAll);
 fields.emailPack.addEventListener("click", emailPack);
@@ -284,4 +377,5 @@ if (savedCode && fields.proCode) {
   verifyPaidPackCode(savedCode, { quiet: true });
 }
 
-generate();
+clearGenerated();
+setPurchaseState(false);

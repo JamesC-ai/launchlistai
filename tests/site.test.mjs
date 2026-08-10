@@ -36,10 +36,12 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Accessibility/);
   assert.match(html, /Objection map/);
   assert.match(html, /Founder update/);
-  assert.match(html, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_pack/);
-  assert.match(html, /utm_content=activation_pack/);
+  assert.match(html, /Complete the current launch plan first/);
+  assert.doesNotMatch(html, /href="https:\/\/namebatch\.pagecheckai\.com\/api\/checkout/);
+  assert.doesNotMatch(html, /href="https:\/\/www\.paypal\.com\/ncp\/payment/);
   assert.match(html, /id="downloadPaidPack"[^>]*disabled/);
-  assert.match(html, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(html, /id="copyAll"[^>]*disabled/);
+  assert.match(html, /id="emailPack"[^>]*disabled/);
   assert.match(html, /After payment, enter the LL- activation code above/);
   assert.match(html, /open support/);
   assert.match(html, /id="assetOwner"/);
@@ -62,8 +64,11 @@ test("ships browser-local launch generator", async () => {
   assert.match(script, /AlternativeTo/);
   assert.match(script, /Asset owner: \$\{v\.assetOwner\}/);
   assert.match(script, /Account and final-submit owner: \$\{v\.accountOwner\}/);
-  assert.match(script, /assign both owners before paid submission work/);
-  assert.match(script, /addEventListener\("input", generate\)/);
+  assert.match(script, /at least 2 approved screenshots/);
+  assert.match(script, /at least 80 characters of verified launch notes/);
+  assert.match(script, /function invalidateLaunch/);
+  assert.match(script, /addEventListener\("input", invalidateLaunch\)/);
+  assert.match(script, /launchGenerated = true/);
 });
 
 test("requires product facts and both owners before outbound handoff", async () => {
@@ -74,13 +79,15 @@ test("requires product facts and both owners before outbound handoff", async () 
     html,
     /value="PageCheckAI"|value="https:\/\/pagecheckai\.com"|value="\$299 website fix sprint"/,
   );
-  for (const id of ["productName", "productUrl", "audience", "pain", "outcome", "offer", "assetOwner", "accountOwner"]) {
+  for (const id of ["productName", "productUrl", "audience", "pain", "outcome", "offer", "assetOwner", "accountOwner", "screenshotCount", "targetChannels", "notes"]) {
     assert.match(html, new RegExp(`id="${id}"[^>]*required`));
   }
   assert.match(script, /function productUrlIsSafe/);
   assert.match(script, /\["http:", "https:"\]/);
   assert.match(script, /launchForm\.reportValidity\(\)/);
-  assert.match(script, /Complete the required launch details and owners before downloading the paid pack/);
+  assert.match(script, /Complete the current launch facts, proof assets, and owners before downloading the paid pack/);
+  assert.match(script, /fields\.paymentLink\.href = qualified \? checkoutHref\("home_current_plan"\) : "#builder"/);
+  assert.match(script, /fields\.activationFallbackLink\.href = qualified \? paymentBaseLinks\.fallback : "#builder"/);
 });
 
 test("includes policy support and SEO discovery files", async () => {
@@ -173,8 +180,10 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(terms, /does not bypass captcha/);
   assert.match(support, /LaunchListAI support/);
   assert.match(support, /generated locally/i);
-  assert.match(support, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_pack/);
-  assert.match(support, /https:\/\/www\.paypal\.com\/ncp\/payment\/29SE33AHUSTRC/);
+  assert.match(support, /utm_content=support_paid_fit#builder/);
+  assert.match(support, /Generate a ready plan before payment/);
+  assert.doesNotMatch(support, /namebatch\.pagecheckai\.com\/api\/checkout/);
+  assert.doesNotMatch(support, /paypal\.com\/ncp\/payment/);
   assert.equal(indexNowKey.trim(), "5211ab56e638ea380b1b270ab15c79d9");
   assert.match(indexNowScript, /api\.indexnow\.org\/indexnow/);
 });
@@ -189,7 +198,9 @@ test("builds thick launch SEO pages with submission safeguards", async () => {
   assert.match(directoryPage, /When the \$99 directory pack is worth it/);
   assert.match(directoryPage, /Start with the free browser-local launch kit/);
   assert.match(directoryPage, /Do not submit duplicate spam listings/);
-  assert.match(directoryPage, /utm_content=seo_ai-directory-submission-pack_pack/);
+  assert.match(directoryPage, /utm_content=seo_ai-directory-submission-pack/);
+  assert.match(directoryPage, /Check paid fit after the current plan/);
+  assert.doesNotMatch(directoryPage, /namebatch\.pagecheckai\.com\/api\/checkout/);
   assert.match(socialPage, /Do not spam communities or post without reading rules/);
   assert.match(socialPage, /Match the post to the channel/);
 });
@@ -213,7 +224,8 @@ test("builds outreach, rejection, and metrics pages with safe execution boundari
   assert.match(emailPage, /Final recipient selection and sending require authorization/);
   assert.match(rejectionPage, /Do not harass editors, evade bans, create duplicate accounts/);
   assert.match(metricsPage, /Do not claim attribution, revenue, rankings, or conversion lifts/);
-  assert.match(microlaunchPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_microlaunch-submission-checklist_pack/);
+  assert.match(microlaunchPage, /utm_content=seo_microlaunch-submission-checklist/);
+  assert.match(microlaunchPage, /Check paid fit after the current plan/);
 });
 
 test("builds gallery, reply, pricing, and support pages with launch safeguards", async () => {
@@ -226,7 +238,8 @@ test("builds gallery, reply, pricing, and support pages with launch safeguards",
   assert.match(replyPage, /founder or maker disclosure/i);
   assert.match(pricingPage, /Do not invent refunds, guarantees, discounts, or subscription terms/);
   assert.match(supportPage, /Sensitive replies and account changes require authorization/);
-  assert.match(supportPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_launch-support-inbox-triage_pack/);
+  assert.match(supportPage, /utm_content=seo_launch-support-inbox-triage/);
+  assert.match(supportPage, /Check paid fit after the current plan/);
 });
 
 test("builds first-comment, demo, category, feedback, and launch operations pages", async () => {
@@ -312,5 +325,23 @@ test("builds account handoff, invite, deal, and post-mortem pages safely", async
   assert.match(dealPage, /Do not create discounts, coupons, payment links, or deal pages/i);
   assert.match(demoPage, /Do not put passwords, API keys, backup codes, or payment data in launch docs/i);
   assert.match(postMortemPage, /Do not claim revenue, rankings, traffic, conversion, or causation without evidence/i);
-  assert.match(postMortemPage, /namebatch\.pagecheckai\.com\/api\/checkout\?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_launch-post-mortem-template_pack/);
+  assert.match(postMortemPage, /utm_content=seo_launch-post-mortem-template/);
+  assert.match(postMortemPage, /Check paid fit after the current plan/);
+});
+
+test("routes all 75 SEO pages through the attributed free launch plan", async () => {
+  const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
+  const slugs = [...sitemap.matchAll(/<loc>https:\/\/launch\.pagecheckai\.com\/([^<]+)<\/loc>/g)]
+    .map((match) => match[1])
+    .filter((slug) => !slug.endsWith(".html") && !["privacy", "support", "terms"].includes(slug));
+
+  assert.equal(slugs.length, 75);
+  for (const slug of slugs) {
+    const html = await readFile(new URL(`../dist/${slug}/index.html`, import.meta.url), "utf8");
+    assert.match(html, /Check paid fit after the current plan/);
+    assert.match(html, new RegExp(`utm_content=seo_${slug}`));
+    assert.match(html, /#builder/);
+    assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout/);
+    assert.doesNotMatch(html, /paypal\.com\/ncp\/payment/);
+  }
 });

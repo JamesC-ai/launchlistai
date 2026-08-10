@@ -53,9 +53,7 @@
           <h2>Build a free launch kit first. Buy the $99 directory pack only when the handoff is ready.</h2>
           <p>Use the free builder to test the positioning and gather the core facts. The paid pack adds a deeper handoff after your product URL, offer, screenshots, and target channels are ready.</p>
         </div>
-        <a class="primary" href="https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_pack">
-          Buy after fit check
-        </a>
+        <a class="primary" id="paymentLink" href="#builder">Complete the current launch plan first</a>
       </section>
 
       <section class="trust-strip" aria-label="LaunchListAI trust boundaries">
@@ -87,9 +85,9 @@
           <p id="proStatus" class="pro-status" aria-live="polite">Enter a valid code to unlock the Directory Submission Pack.</p>
           <p class="fallback-note">
             After payment, enter the LL- activation code above. Need a code?
-            <a href="https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&amp;product=launchlistai&amp;utm_source=launchlistai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=activation_pack">Buy for $99</a>.
+            <a id="activationPaymentLink" href="#builder">Generate a ready launch plan before buying</a>.
             If checkout is unavailable, use the
-            <a href="https://www.paypal.com/ncp/payment/29SE33AHUSTRC">PayPal fallback</a>, then <a href="/support.html">open support</a> with the receipt.
+            <a id="activationFallbackLink" href="#builder">PayPal fallback after fit</a>, then <a href="/support.html">open support</a> with the receipt.
           </p>
         </div>
       </section>
@@ -150,6 +148,14 @@
             <input id="accountOwner" placeholder="e.g. founder" required />
           </label>
           <label>
+            Approved screenshot count
+            <input id="screenshotCount" type="number" min="0" step="1" value="0" required />
+          </label>
+          <label>
+            Target channels
+            <textarea id="targetChannels" rows="3" placeholder="Name the 2-4 directories or communities that match this launch." required></textarea>
+          </label>
+          <label>
             Category
             <select id="category">
               <option value="AI productivity">AI productivity</option>
@@ -160,8 +166,8 @@
             </select>
           </label>
           <label>
-            Notes
-            <textarea id="notes" rows="7" placeholder="Add approved positioning, disclosure, screenshot, support, and channel notes."></textarea>
+            Verified launch notes
+            <textarea id="notes" rows="7" minlength="80" placeholder="Add at least 80 characters covering approved positioning, evidence, limitations, pricing, support, and launch timing." required></textarea>
           </label>
           <button class="primary" type="submit">Generate launch pack</button>
         </form>
@@ -173,8 +179,8 @@
               <h2>Directory launch kit</h2>
             </div>
             <div class="button-row">
-              <button id="copyAll" type="button">Copy</button>
-              <button id="emailPack" type="button">Email pack</button>
+              <button id="copyAll" type="button" disabled>Copy</button>
+              <button id="emailPack" type="button" disabled>Email pack</button>
             </div>
           </div>
           <article>

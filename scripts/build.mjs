@@ -4,7 +4,6 @@ const root = new URL("../", import.meta.url);
 const distDir = new URL("dist/", root);
 const publicDir = new URL("public/", root);
 const site = "https://launch.pagecheckai.com";
-const packUrl = "https://namebatch.pagecheckai.com/api/checkout?v=launchlist-20260731&product=launchlistai";
 const pages = [
   {
     slug: "ai-directory-submission-pack",
@@ -1627,13 +1626,14 @@ function escapeHtml(value) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
-function checkoutUrlFor(content) {
-  const url = new URL(packUrl);
-  url.searchParams.set("utm_source", "launchlistai");
-  url.searchParams.set("utm_medium", "owned");
-  url.searchParams.set("utm_campaign", "conversion");
-  url.searchParams.set("utm_content", content);
-  return escapeHtml(url.toString());
+function freePlannerUrlFor(content) {
+  const params = new URLSearchParams({
+    utm_campaign: "conversion",
+    utm_content: content,
+    utm_medium: "owned",
+    utm_source: "launchlistai",
+  });
+  return `/?${escapeHtml(params.toString())}#builder`;
 }
 
 function list(items) {
@@ -1669,8 +1669,8 @@ for (const page of pages) {
       <h1>${title}</h1>
       <p>${escapeHtml(page.description)}</p>
       <div class="button-row">
-        <a class="primary" href="/#builder">Build launch pack</a>
-        <a class="secondary" href="${checkoutUrlFor(`seo_${slug}_pack`)}">Buy $99 pack</a>
+        <a class="primary" href="${freePlannerUrlFor(`seo_${slug}`)}">Build free launch plan</a>
+        <a class="secondary" href="${freePlannerUrlFor(`seo_${slug}`)}">Check paid fit after the current plan</a>
       </div>
       <section class="seo-grid" aria-label="LaunchListAI page details">
         <article class="panel seo-card">
