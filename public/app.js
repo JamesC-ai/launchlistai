@@ -330,15 +330,20 @@ function downloadPaidPack() {
     setPaidPackActive(true, "Complete the current launch facts, proof assets, and owners before downloading the paid pack.");
     return;
   }
-  const blob = new Blob([paidPackText()], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "launchlistai-directory-submission-pack.txt";
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+  try {
+    const blob = new Blob([paidPackText()], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "launchlistai-directory-submission-pack.txt";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setPaidPackActive(true, "Paid directory pack download started. Wait for your browser to confirm the file.");
+  } catch {
+    setPaidPackActive(true, "Paid directory pack download could not start. Your current launch plan and activation are still available; try again.");
+  }
 }
 
 async function copyAll() {

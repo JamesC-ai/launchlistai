@@ -69,6 +69,10 @@ test("ships browser-local launch generator", async () => {
   assert.match(script, /function invalidateLaunch/);
   assert.match(script, /addEventListener\("input", invalidateLaunch\)/);
   assert.match(script, /launchGenerated = true/);
+  assert.match(script, /window\.setTimeout\(\(\) => URL\.revokeObjectURL\(url\), 1000\)/);
+  assert.match(script, /Paid directory pack download started\. Wait for your browser to confirm the file\./);
+  assert.match(script, /Your current launch plan and activation are still available; try again\./);
+  assert.doesNotMatch(script, /link\.remove\(\);\s*URL\.revokeObjectURL\(url\);/);
 });
 
 test("requires product facts and both owners before outbound handoff", async () => {
