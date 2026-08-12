@@ -1620,6 +1620,18 @@ const pages = [
     safety: ["Do not claim revenue, rankings, traffic, conversion, or causation without evidence.", "Do not expose private users, payment data, credentials, or platform disputes.", "Public post-mortems require owner approval."],
     faq: [["Does it prove launch results?", "No. It organizes verified facts and caveats."], ["Can it publish the post-mortem?", "No."]],
   },
+  {
+    slug: "early-product-cold-start-checklist",
+    title: "Early Product Cold-start Checklist",
+    description: "Turn verified product facts into a narrow first-audience hypothesis, owned-channel launch sequence, attributed links, and manual follow-up queue without scraping users or promising first customers.",
+    audience: "solo founders with a working product, support path, and offer who need a bounded first distribution pass",
+    assets: ["First-audience hypothesis", "Proof and objection inventory", "Owned-channel sequence", "Attributed manual follow-up queue"],
+    steps: ["Confirm the live product, support path, offer, and current proof.", "Choose one narrow audience and one observable problem signal.", "Prepare owned-page, directory, and helpful-community drafts with distinct attribution.", "Review evidence and approve each public post, message, or submission manually."],
+    priority: ["Fix product, payment, and support friction before adding channels.", "Use one relevant audience and one useful proof point per cycle.", "Record unknown outcomes instead of treating submissions or clicks as customers."],
+    proofAssets: ["Live canonical product and support URLs", "Current offer and free-first path", "Approved screenshots or product evidence", "Named owner for replies and follow-up"],
+    safety: ["Do not scrape profiles, buy lists, or send bulk messages.", "Do not auto-post, auto-submit, or contact people without authorization.", "Do not claim users, leads, conversion, sales, or revenue without verified evidence."],
+    faq: [["Will this find my first customers automatically?", "No. It prepares a reviewable distribution sequence and leaves every public or account action to the owner."], ["Does a directory submission prove demand?", "No. Treat submissions, impressions, clicks, inquiries, orders, and revenue as separate evidence." ]],
+  },
 ];
 
 function escapeHtml(value) {

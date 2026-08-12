@@ -175,10 +175,11 @@ test("includes policy support and SEO discovery files", async () => {
     "launch-influencer-announcement-brief",
     "launch-demo-account-safety-checklist",
     "launch-post-mortem-template",
+    "early-product-cold-start-checklist",
   ]) {
     assert.match(sitemap, new RegExp(route));
   }
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 79);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 80);
   assert.match(terms, /does not guarantee directory approval/i);
   assert.match(terms, /Paid packs are browser-generated planning files/);
   assert.match(terms, /does not bypass captcha/);
@@ -333,13 +334,13 @@ test("builds account handoff, invite, deal, and post-mortem pages safely", async
   assert.match(postMortemPage, /Check paid fit after the current plan/);
 });
 
-test("routes all 75 SEO pages through the attributed free launch plan", async () => {
+test("routes all 76 SEO pages through the attributed free launch plan", async () => {
   const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
   const slugs = [...sitemap.matchAll(/<loc>https:\/\/launch\.pagecheckai\.com\/([^<]+)<\/loc>/g)]
     .map((match) => match[1])
     .filter((slug) => !slug.endsWith(".html") && !["privacy", "support", "terms"].includes(slug));
 
-  assert.equal(slugs.length, 75);
+  assert.equal(slugs.length, 76);
   for (const slug of slugs) {
     const html = await readFile(new URL(`../dist/${slug}/index.html`, import.meta.url), "utf8");
     assert.match(html, /Check paid fit after the current plan/);
@@ -348,4 +349,15 @@ test("routes all 75 SEO pages through the attributed free launch plan", async ()
     assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout/);
     assert.doesNotMatch(html, /paypal\.com\/ncp\/payment/);
   }
+});
+
+test("builds a bounded early-product cold-start checklist", async () => {
+  const html = await readFile(new URL("../dist/early-product-cold-start-checklist/index.html", import.meta.url), "utf8");
+  assert.match(html, /one narrow audience and one observable problem signal/i);
+  assert.match(html, /Do not scrape profiles, buy lists, or send bulk messages/i);
+  assert.match(html, /Do not claim users, leads, conversion, sales, or revenue/i);
+  assert.match(html, /utm_content=seo_early-product-cold-start-checklist/);
+  assert.match(html, /Check paid fit after the current plan/);
+  assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout/);
+  assert.doesNotMatch(html, /paypal\.com\/ncp\/payment/);
 });
