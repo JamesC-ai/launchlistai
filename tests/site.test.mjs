@@ -20,6 +20,7 @@ test("renders LaunchListAI builder", async () => {
   assert.match(html, /Microlaunch/);
   assert.match(html, /Press kit/);
   assert.match(html, /Listing copy/);
+  assert.match(html, /Email paid-fit summary/);
   assert.match(html, /Metrics/);
   assert.match(html, /Gallery/);
   assert.match(html, /Reply queue/);
@@ -92,6 +93,25 @@ test("requires product facts and both owners before outbound handoff", async () 
   assert.match(script, /Complete the current launch facts, proof assets, and owners before downloading the paid pack/);
   assert.match(script, /fields\.paymentLink\.href = qualified \? checkoutHref\("home_current_plan"\) : "#builder"/);
   assert.match(script, /fields\.activationFallbackLink\.href = qualified \? paymentBaseLinks\.fallback : "#builder"/);
+});
+
+test("emails only a minimal paid-fit summary", async () => {
+  const script = await readFile(new URL("../dist/app.js", import.meta.url), "utf8");
+  const start = script.indexOf("function approvedInquiryText()");
+  const end = script.indexOf("function emailPack()", start);
+  const inquiryFunction = script.slice(start, end);
+
+  assert.notEqual(start, -1);
+  assert.notEqual(end, -1);
+  assert.match(inquiryFunction, /Approved screenshots/);
+  assert.match(inquiryFunction, /Target channel count/);
+  assert.match(inquiryFunction, /full pack are intentionally not included/);
+  assert.doesNotMatch(
+    inquiryFunction,
+    /v\.(?:audience|pain|outcome|notes|assetOwner|accountOwner)|packText\(|paidPackText\(/,
+  );
+  assert.match(script, /const subject = "LaunchListAI paid fit inquiry"/);
+  assert.match(script, /encodeURIComponent\(approvedInquiryText\(\)\)/);
 });
 
 test("includes policy support and SEO discovery files", async () => {
@@ -187,6 +207,8 @@ test("includes policy support and SEO discovery files", async () => {
   assert.match(support, /generated locally/i);
   assert.match(support, /utm_content=support_paid_fit#builder/);
   assert.match(support, /Generate a ready plan before payment/);
+  assert.match(support, /send only the product name, public URL, category, current offer/i);
+  assert.match(support, /Do not email audience research, positioning notes, owner identities or roles/i);
   assert.doesNotMatch(support, /namebatch\.pagecheckai\.com\/api\/checkout/);
   assert.doesNotMatch(support, /paypal\.com\/ncp\/payment/);
   assert.equal(indexNowKey.trim(), "5211ab56e638ea380b1b270ab15c79d9");

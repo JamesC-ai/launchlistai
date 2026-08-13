@@ -355,11 +355,29 @@ async function copyAll() {
   }, 1400);
 }
 
+function approvedInquiryText() {
+  const v = values();
+  const channelCount = v.targetChannels
+    .split(/[\n,]/)
+    .map((channel) => channel.trim())
+    .filter(Boolean).length;
+  return `LaunchListAI paid fit inquiry
+
+Product: ${v.productName}
+Public URL: ${v.productUrl}
+Category: ${v.category}
+Current offer: ${v.offer}
+Approved screenshots: ${v.screenshotCount}
+Target channel count: ${channelCount}
+Readiness: A current launch plan is ready for owner review.
+
+Privacy note: Audience research, pain and outcome notes, internal launch notes, owner identities or roles, generated listing copy, maker comments, social drafts, credentials, private assets, and the full pack are intentionally not included. Please reply with scope and pack-fit guidance before requesting any additional approved detail.`;
+}
+
 function emailPack() {
   if (!launchGenerated || !launchQualified || !fields.launchForm.reportValidity()) return;
-  const v = values();
-  const subject = `LaunchListAI pack - ${v.productName}`;
-  location.href = `mailto:support@pagecheckai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(packText())}`;
+  const subject = "LaunchListAI paid fit inquiry";
+  location.href = `mailto:support@pagecheckai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(approvedInquiryText())}`;
 }
 
 fields.launchForm.addEventListener("submit", (event) => {
