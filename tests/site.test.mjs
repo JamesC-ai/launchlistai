@@ -76,6 +76,15 @@ test("ships browser-local launch generator", async () => {
   assert.doesNotMatch(script, /link\.remove\(\);\s*URL\.revokeObjectURL\(url\);/);
 });
 
+test("keeps a qualified launch pack retryable when clipboard access fails", async () => {
+  const script = await readFile(new URL("../dist/app.js", import.meta.url), "utf8");
+  assert.match(script, /fields\.copyAll\.disabled = true/);
+  assert.match(script, /await navigator\.clipboard\.writeText\(packText\(\)\)/);
+  assert.match(script, /Copy failed - retry/);
+  assert.match(script, /fields\.copyAll\.disabled = !launchQualified/);
+  assert.match(script, /try \{[\s\S]+catch \{[\s\S]+finally \{/);
+});
+
 test("requires product facts and both owners before outbound handoff", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   const script = await readFile(new URL("../dist/app.js", import.meta.url), "utf8");
